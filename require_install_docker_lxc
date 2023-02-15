@@ -1,0 +1,22 @@
+to install docker in lxc container add this config on the lxc container befor install docker
+  
+  sudo lxc config set sonarqube security.nesting=true
+  
+sudo lxc config set sonarqube security.nesting=true
+security.privileged: "true"
+sudo lxc config set sonarqube security.privileged=true
+sudo lxc config set k8s-worker-2 security.privileged=true
+sudo lxc config set k8s-master-1 security.privileged=true
+sudo lxc config set k8s-master-1 linux.kernel_modules =bridge,br_netfilter,x_tables,ip_tables,ip_vs,ip_set,ipip,xt_mark,xt_multiport,ip_tunnel,tunnel4,netlink_diag,nf_conntrack,nfnetlink,overlay
+linux.kernel_modules: br_netfilter
+sudo lxc config set  nginx-proxy-manager  linux.kernel_modules=br_netfilter
+'
+10.64.120.182
+
+ansible-playbook  -i /opt/docker/hosts /opt/docker/ansible--devops-deployement.yml --limit 10.64.120.23;
+ansible-playbook  -i /opt/docker/hosts /opt/docker/ansible--devops-deployement.yml --limit 10.64.120.182;
+@123456?
+
+
+lxc config device add non-container port80 proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80
+lxc config device add nom-container  port81 proxy listen=tcp:0.0.0.0:81 connect=tcp:127.0.0.1:81

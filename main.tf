@@ -84,8 +84,8 @@ resource "lxd_container" "k8-worker2" {
   profiles  = ["default"]
 }
 
-resource "lxd_container" "ansible-server-lab" {
-  name      = "ansible-server-lab"
+resource "lxd_container" "ansible-server-lab1" {
+  name      = "ansible-server-lab1"
   image     = "ubuntu:20.04"
   ephemeral = false
   profiles  = ["default"]
