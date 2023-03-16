@@ -1,0 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+kubectl run nginx --image=nginx --port=80 --replicas=3
