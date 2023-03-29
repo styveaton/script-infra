@@ -26,3 +26,7 @@ lxc config device add nom-container  port81 proxy listen=tcp:0.0.0.0:81 connect=
 sudo ufw allow in on lxdbr0
 sudo ufw route allow in on lxdbr0
 sudo ufw route allow out on lxdbr0
+
+
+/// link install GUI lxc 
+https://www.youtube.com/watch?v=FVL1y-sy9mY
