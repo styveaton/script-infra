@@ -30,3 +30,9 @@ sudo ufw route allow out on lxdbr0
 
 /// link install GUI lxc 
 https://www.youtube.com/watch?v=FVL1y-sy9mY
+
+//NginX Proxy Manager and Local DNS
+https://www.youtube.com/watch?v=26OF6_6i9bc
+
+//Pi-hole setup ubuntu 22.04 | Network-wide protection for business and home
+https://www.youtube.com/watch?v=awuqf9q3I3Q
