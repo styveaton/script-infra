@@ -31,6 +31,24 @@ sudo ufw route allow out on lxdbr0
 /// link install GUI lxc 
 https://www.youtube.com/watch?v=FVL1y-sy9mY
 
+ apt-get update && apt-get install nginx php-fpm php-curl s 
+ wget https://github.com/lxdware/lxd-dashboard/archive/v3.7.0.tar.gz
+  sudo tar -xzf v3.7.0.tar.gz
+   sudo cp -a lxd-dashboard-3.7.0/default /etc/nginx/sites-available/
+    sudo cp -a lxd-dashboard-3.7.0/lxd-dashboard/ /var/www/html/
+     sudo mkdir -p /var/lxdware/data/sqlite
+      sudo mkdir -p /var/lxdware/data/lxd
+       sudo mkdir -p /var/lxdware/backups
+       sudo chown -R www-data:www-data /var/lxdware/
+       sudo chown -R www-data:www-data /var/www/html
+       
+        lxc network forward port add lxdbr0 10.0.0.200 tcp 8080 10.135.228.191 80
+
+
+
+
+
+
 //NginX Proxy Manager and Local DNS
 https://www.youtube.com/watch?v=26OF6_6i9bc
 
