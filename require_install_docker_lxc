@@ -43,8 +43,18 @@ https://www.youtube.com/watch?v=FVL1y-sy9mY
        sudo chown -R www-data:www-data /var/www/html
        
         lxc network forward port add lxdbr0 10.0.0.200 tcp 8080 10.135.228.191 80
+        
+        go there sudo nano /etc/nginx/sites-available/default
+
+and uncommennt  fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+comment                 #fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+
+systemctl restart nginx
 
 
+copy the certuificat and cree on the server host lxc container  lxdware.crt and paste the certifcate 
+lxc config trust add lxdware.crt
+ lxc config set core.https_address [::]
 
 
 
