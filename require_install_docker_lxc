@@ -20,6 +20,7 @@ ansible-playbook  -i /opt/docker/hosts /opt/docker/ansible--devops-deployement.y
 
 lxc config device add non-container port80 proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80
 lxc config device add nom-container  port81 proxy listen=tcp:0.0.0.0:81 connect=tcp:127.0.0.1:81
+lxc config device add nginx-proxy-manager  port443 proxy listen=tcp:0.0.0.0:443 connect=tcp:127.0.0.1:443
 
 //allow lxd network interface 
 
