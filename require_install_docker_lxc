@@ -69,3 +69,16 @@ https://www.youtube.com/watch?v=awuqf9q3I3Q
 
 //off swap 
  sudo swapoff -a
+
+
+//fix this issues 
+
+E0512 13:52:05.031455   48646 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
+E0512 13:52:05.032718   48646 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
+E0512 13:52:05.033255   48646 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
+
+
+sudo -i
+swapoff -a
+exit
+strace -eopenat kubectl version
