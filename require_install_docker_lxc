@@ -43,7 +43,8 @@ https://www.youtube.com/watch?v=FVL1y-sy9mY
        sudo chown -R www-data:www-data /var/lxdware/
        sudo chown -R www-data:www-data /var/www/html
        
-        lxc network forward port add lxdbr0 10.0.0.200 tcp 8080 10.135.228.191 80
+        lxc network forward create lxdbr0 10.0.0.200 (host)
+        lxc network forward port add lxdbr0 10.0.0.200 tcp 8080 10.135.228.191(lxc container) 80
         
         go there sudo nano /etc/nginx/sites-available/default
 
