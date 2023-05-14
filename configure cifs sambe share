@@ -1,0 +1,37 @@
+CIFS Mount on Ubuntu 14.04
+1. Install packages
+
+$ sudo apt-get install cifs-utils
+
+2. Create a Mount point Directory
+
+$ sudo mkdir /mnt/CIFSMOUNT
+$ sudo chown -R <user>:<user> /mnt/CIFSMOUNT
+
+3. CIFS Credentials
+
+$ sudo su
+# cd /root
+# vim .smbcredentials
+
+Supply the username and password for CIFS storage as follows:
+
+user=<cifsusername>
+password=<password>
+
+4. Fstab Entry
+
+$ sudo vim /etc/fstab
+
+Add the following content at the bottom of the file:
+
+#
+# CBS NAS CIFS Mount Point 
+#
+//<CISFSTORAGEIP>/<cifspath>  /mnt/CIFSMOUNT        cifs    credentials=/root/.smbcredentials,rw,nounix,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0
+Please replace <CISFSTORAGEIP> with actual IP and <cifspath> with actual path
+
+5. Mount the CIFS storage
+
+$ sudo mount -a
+$ df -h
