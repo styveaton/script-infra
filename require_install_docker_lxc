@@ -86,3 +86,6 @@ sudo -i
 swapoff -a
 exit
 strace -eopenat kubectl version
+
+
+https://github.com/vikash-kumar01
