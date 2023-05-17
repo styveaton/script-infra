@@ -79,6 +79,9 @@ E0512 13:52:05.032718   48646 memcache.go:265] couldn't get current server API g
 E0512 13:52:05.033255   48646 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
 
 
+//Mr Devops tuto
+https://www.youtube.com/watch?v=8KZi7KBpk0I
+
 sudo -i
 swapoff -a
 exit
