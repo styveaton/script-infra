@@ -1,6 +1,6 @@
 seup k8s to lxc container
 
-https://www.youtube.com/watch?v=XQvQUE7tAsk
+https://www.youtube.com/watch?v=XQvQUE7tAsk (https://github.com/styveaton/kubernetes_lxc.git)
 
 to install docker in lxc container add this config on the lxc container befor install docker
   
