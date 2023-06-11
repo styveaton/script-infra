@@ -1,0 +1,51 @@
+mysql nodes on docker
+
+https://www.youtube.com/watch?v=BByjcA2ad00
+
+https://www.digitalocean.com/community/tutorials/how-to-create-a-multi-node-mysql-cluster-on-ubuntu-18-04
+
+
+
+
+dev Environement 
+
+MySQL Management node create
+-------------------------------------------------------
+docker run -d --net=mysql --hostname management1 -v "/opt/DEVELOPMENT/mysql/ndb_mgmd:/var/lib/mysql" -v "/opt/DEVELOPMENT/mysql/my.cnf:/etc/my.cnf" -v "/opt/DEVELOPMENT/mysql/mysql-cluster.cnf:/etc/mysql-cluster.cnf"   --name=management1 --ip=174.17.0.2 mysql/mysql-cluster:8.0.32 ndb_mgmd --ndb-nodeid=1 --reload --initial
+
+Two NDBD nodes creation
+--------------------------------------------
+docker run -d --net=mysql -v "/opt/DEVELOPMENT/mysql/ndb1:/var/lib/mysql"  -v "/opt/DEVELOPMENT/mysql/mysql-cluster.cnf:/etc/mysql-cluster.cnf" --name=ndb1 --ip=174.17.0.3 mysql/mysql-cluster:8.0.32 ndbd --ndb-nodeid=2 --connect-string 174.17.0.2
+
+docker run -d --net=mysql -v "/opt/DEVELOPMENT/mysql/ndb2:/var/lib/mysql"  -v "/opt/DEVELOPMENT/mysql/mysql-cluster.cnf:/etc/mysql-cluster.cnf" --name=ndb2 --ip=174.17.0.4 mysql/mysql-cluster:8.0.32 ndbd --ndb-nodeid=3 --connect-string 174.17.0.2
+
+MySQL server nodes
+----------------------------------
+docker run -d -v "/opt/DEVELOPMENT/mysql/mysqld1:/var/lib/mysql"  -v "/opt/DEVELOPMENT/mysql/mysql-cluster.cnf:/etc/mysql-cluster.cnf" --net=mysql --name=mysql1 --ip=174.17.0.10 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql/mysql-cluster:8.0.32 mysqld --ndb-nodeid=4 --ndb-connectstring 174.17.0.2
+
+docker run -d -v "/opt/DEVELOPMENT/mysql/mysqld2:/var/lib/mysql"  -v "/opt/DEVELOPMENT/mysql/mysql-cluster.cnf:/etc/mysql-cluster.cnf" --net=mysql --name=mysql2 --ip=174.17.0.11 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql/mysql-cluster:8.0.32 mysqld --ndb-nodeid=5 --ndb-connectstring 174.17.0.2
+
+
+docker run -it --net=mysql mysql/mysql-cluster ndb_mgm --connect-string 174.17.0.2
+
+To start mysql client for server1 and server2
+-----------------------------------------------------------------------
+docker exec -it mysql1 mysql -uroot -p%Z,#HM%,V^7/vcft3eD9ka&y2At0744O
+
+docker exec -it mysql2 mysql -uroot -pu4xx_GZm#yH&3dU/eiGn03Q#&83_8Z;8
+
+MySQL password from logs
+--------------------------------------------
+docker logs mysql1
+docker logs mysql2
+
+NDB management client to connect to management
+-------------------------------------------------------------------------------------
+
+SELECT host FROM mysql.user WHERE User = 'root';
+
+use mysql;
+ update user set host='%' where host='localhost';
+ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;
+
+my.cnf and mysql-cluster.cnf
