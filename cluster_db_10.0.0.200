@@ -1,0 +1,10 @@
+mysql1 password  @4#Qb&%yHSfztTQr4.1t/*831k1gy?Z3
+
+mysql2 password uMd./_;03hxc:JU_7_K1N1/TWHm93P5P
+
+
+
+
+docker exec -it mysql1 mysql -uroot -p @4#Qb&%yHSfztTQr4.1t/*831k1gy?Z3
+
+docker exec -it mysql2 mysql -uroot -puMd./_;03hxc:JU_7_K1N1/TWHm93P5P
