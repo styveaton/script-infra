@@ -1,0 +1,17 @@
+mysql1 password  @4#Qb&%yHSfztTQr4.1t/*831k1gy?Z3
+
+mysql2 password uMd./_;03hxc:JU_7_K1N1/TWHm93P5P
+
+
+
+
+docker exec -it mysql1 mysql -uroot -p Lcm95YYdnkz
+docker exec -it mysql2 mysql -uroot -p Lcm95YYdnkz
+
+cluster_db 
+
+
+CREATE USER 'db_admin'@'%' IDENTIFIED BY 'Lcm95YYdnkz';
+GRANT ALL PRIVILEGES ON *.* TO 'db_admin'@'%';
+ALTER USER 'db_admin'@'%' IDENTIFIED WITH mysql_native_password BY 'Lcm95YYdnkz';
+FLUSH PRIVILEGES;
