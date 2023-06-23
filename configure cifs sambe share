@@ -16,8 +16,8 @@ $ sudo su
 
 Supply the username and password for CIFS storage as follows:
 
-user=<cifsusername>
-password=<password>
+user=admin
+password=B@nane21
 
 4. Fstab Entry
 
@@ -30,6 +30,8 @@ Add the following content at the bottom of the file:
 #
 //<CISFSTORAGEIP>/<cifspath>  /mnt/CIFSMOUNT        cifs    credentials=/root/.smbcredentials,rw,nounix,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0
 Please replace <CISFSTORAGEIP> with actual IP and <cifspath> with actual path
+
+//10.0.0.22/share  /DATA        cifs    credentials=/root/.smbcredentials,rw,nounix,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0
 
 5. Mount the CIFS storage
 
