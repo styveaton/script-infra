@@ -76,3 +76,7 @@ sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 sudo systemctl enable --now kubelet
  use kubeadmin ti setuo control plane using flannel pod network
  sudo kubeadm init --cri-socket unix://var/run/containerd/containerd.sock --pod-network-cidr-10.244.0.0/16
+
+kubeadm join 10.0.0.19:6443 --token 7mqnrn.tenfmq2rliqcu42r \
+        --discovery-token-ca-cert-hash sha256:be8fc97f70c60616109b841e97a17f6de517626c777b662d2a0dddfddeb1685b
+
