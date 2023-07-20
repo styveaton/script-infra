@@ -81,7 +81,11 @@ kubeadm join 10.0.0.19:6443 --token 7mqnrn.tenfmq2rliqcu42r \
         --discovery-token-ca-cert-hash sha256:be8fc97f70c60616109b841e97a17f6de517626c777b662d2a0dddfddeb1685b
 
 
+command to check kubectl get pods --all-namespaces and check the coredns status 
+
+
 install flannel using kubectl
 
  kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+run the 
 
