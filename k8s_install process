@@ -77,6 +77,9 @@ sudo systemctl enable --now kubelet
  use kubeadmin ti setuo control plane using flannel pod network
  sudo kubeadm init --apiserver-advertise-address=10.0.0.19 --cri-socket unix://var/run/containerd/containerd.sock --pod-network-cidr-10.244.0.0/16
 
+sudo kubeadm init --apiserver-advertise-address=10.0.0.19 --cri-socket unix://run/cri-dockerd.sock --pod-network-cidr-10.244.0.0/16
+            
+
 make sure port 6443 is open on control plane
 kubeadm join 10.0.0.19:6443 --token 4ptfq2.0j92jkw53zc92vop \
         --discovery-token-ca-cert-hash sha256:af1479f873a59e3c2ab7437cbc1f834adc4eb4e726ddaaf3c65fff2ccd709898 --cri-socket unix://var/run/containerd/containerd.sock
