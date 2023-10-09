@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Répertoire de sauvegarde
+BACKUP_DIR="/chemin/vers/le/repertoire/de/sauvegarde"
+
+# Date actuelle pour nommer le fichier
+DATE=$(date +%Y%m%d%H%M%S)
+
+# Informations pour la connexion à la base de données MySQL
+DB_USER="votre_utilisateur"
+DB_PASS="votre_mot_de_passe"
+
+# Liste des bases de données à sauvegarder
+DB_NAMES=("db_money_abonnement" "db_money_operateur" "db_money_transaction" "db_money_user")
+
+# Boucle à travers les bases de données
+for DB_NAME in "${DB_NAMES[@]}"
+do
+    # Nom du fichier de sauvegarde
+    BACKUP_FILE="$BACKUP_DIR/$DB_NAME_backup_$DATE.sql"
+
+    # Effectuer la sauvegarde
+    mysqldump -u$DB_USER -p$DB_PASS $DB_NAME > $BACKUP_FILE
+
+    # Archiver le fichier de sauvegarde
+    tar -czf "$BACKUP_DIR/$DB_NAME_backup_$DATE.tar.gz" $BACKUP_FILE
+
+    # Supprimer le fichier SQL non compressé
+    rm $BACKUP_FILE
+done
+
+# Supprimer les sauvegardes anciennes (facultatif)
+# find $BACKUP_DIR -type f -mtime +7 -exec rm {} \;
