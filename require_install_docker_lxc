@@ -100,3 +100,9 @@ https://github.com/vikash-kumar01 (backup all his repository and ry to do that m
 /// installll jasper report
 
 https://www.golinuxcloud.com/install-jasperreports-server/
+
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+
