@@ -1,5 +1,9 @@
 install k8s cluster 
 Os centos 8
+open this port 
+https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+using this command  sudo ufw allow 10259/tcp
+                      sudo ufw allow 2379:2380/tcp
 1- install & configure  prerequisites 
 https://kubernetes.io/docs/setup/production-environment/container-runtimes/
 
@@ -28,6 +32,7 @@ https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 
 commmand 
  wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz
+   wget https://github.com/containerd/containerd/releases/download/v1.7.11/containerd-1.7.11-linux-amd64.tar.gz
 
  tar Cxzvf /usr/local containerd-1.7.2-linux-amd64.tar.gz
  sudo mkdir -p /usr/local/lib/systemd/system
@@ -37,9 +42,10 @@ systemctl daemon-reload
 systemctl enable --now containerd
 
  wget https://github.com/opencontainers/runc/releases/download/v1.1.8/runc.amd64
+  wget https://github.com/opencontainers/runc/releases/download/v1.1.11/runc.amd64
 install -m 755 runc.amd64 /usr/local/sbin/runc
 
- wget https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz
+ wget https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
 
 mkdir -p /opt/cni/bin
 
