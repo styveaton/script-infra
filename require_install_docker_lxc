@@ -106,3 +106,13 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
 
+
+open all rabbit port 
+
+sudo ufw allow 5672/tcp && \
+sudo ufw allow 15672/tcp && \
+sudo ufw allow 25672:35672/tcp && \
+sudo ufw allow 61613/tcp && \
+sudo ufw allow 1883/tcp && \
+sudo ufw allow 15675/tcp
+
