@@ -1,1 +1,134 @@
-haproxy
+Installer Certbot
+Installez Certbot pour gérer les certificats SSL :
+
+sudo apt install certbot
+sudo apt install python3-certbot
+
+Configurer HAProxy pour utiliser les certificats
+Modifiez la configuration de HAProxy pour inclure les certificats à partir d’un dossier dédié :
+
+    sudo mkdir -p /etc/haproxy/certs
+
+Étape 2 : Configurer Certbot pour HAProxy
+
+Certbot n’a pas d'intégration directe avec HAProxy, donc nous allons utiliser un hook script.
+
+    Créer un script pour générer des certificats
+    Créez un script nommé generate_cert.sh :
+
+sudo nano /usr/local/bin/generate_cert.sh
+
+Contenu du script :
+
+#!/bin/bash
+DOMAIN=$1
+CERT_PATH="/etc/haproxy/certs"
+
+if [ -z "$DOMAIN" ]; then
+    echo "Usage: $0 <domain>"
+    exit 1
+fi
+
+certbot certonly --standalone -d "$DOMAIN" --non-interactive --agree-tos --email admin@$DOMAIN
+
+if [ $? -eq 0 ]; then
+    echo "Certificate generated successfully for $DOMAIN"
+    cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > "$CERT_PATH/$DOMAIN.pem"
+    systemctl reload haproxy
+else
+    echo "Failed to generate certificate for $DOMAIN"
+fi
+
+Rendez-le exécutable :
+
+sudo chmod +x /usr/local/bin/generate_cert.sh
+
+Tester le script pour un sous-domaine
+Par exemple, pour sub1.klinuxa.com :
+
+    sudo /usr/local/bin/generate_cert.sh sub1.klinuxa.com
+
+Étape 3 : Automatiser avec un fichier de configuration HAProxy
+
+Ajoutez une configuration générique dans /etc/haproxy/haproxy.cfg :
+
+frontend https_in
+    bind *:443 ssl crt /etc/haproxy/certs
+    mode http
+    default_backend default_app
+
+backend default_app
+    server app1 127.0.0.1:8080
+
+Rechargez HAProxy :
+
+sudo systemctl reload haproxy
+
+Étape 4 : Créer des sous-domaines dynamiquement
+
+    Script pour ajouter et sécuriser un sous-domaine
+    Créez un script nommé add_subdomain.sh :
+
+sudo nano /usr/local/bin/add_subdomain.sh
+
+Contenu du script :
+
+#!/bin/bash
+SUBDOMAIN=$1
+ROOT_DOMAIN="klinuxa.com"
+FULL_DOMAIN="${SUBDOMAIN}.${ROOT_DOMAIN}"
+
+echo "Creating and securing $FULL_DOMAIN"
+
+# Generate SSL Certificate
+/usr/local/bin/generate_cert.sh $FULL_DOMAIN
+
+Rendez-le exécutable :
+
+sudo chmod +x /usr/local/bin/add_subdomain.sh
+
+Tester le script
+Par exemple, pour sub2.klinuxa.com :
+
+    sudo /usr/local/bin/add_subdomain.sh sub2
+
+Étape 5 : Automatiser le renouvellement des certificats
+
+Certbot peut renouveler automatiquement les certificats, mais il faut s'assurer que HAProxy recharge la configuration après un renouvellement.
+
+    Créer un hook de renouvellement
+    Créez un fichier /etc/letsencrypt/renewal-hooks/deploy/reload_haproxy.sh :
+
+sudo nano /etc/letsencrypt/renewal-hooks/deploy/reload_haproxy.sh
+
+Contenu du fichier :
+
+#!/bin/bash
+CERT_PATH="/etc/haproxy/certs"
+for domain in $(ls /etc/letsencrypt/live/); do
+    cat /etc/letsencrypt/live/$domain/fullchain.pem /etc/letsencrypt/live/$domain/privkey.pem > "$CERT_PATH/$domain.pem"
+done
+systemctl reload haproxy
+
+Rendez-le exécutable :
+
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload_haproxy.sh
+
+Vérifier le renouvellement automatique
+Testez le renouvellement :
+
+    sudo certbot renew --dry-run
+
+Étape 6 : Créer un alias Bash pour simplifier
+
+Ajoutez un alias dans ~/.bashrc pour exécuter le script facilement :
+
+alias addsub="sudo /usr/local/bin/add_subdomain.sh"
+
+Rechargez le fichier ~/.bashrc :
+
+source ~/.bashrc
+
+Désormais, pour ajouter un sous-domaine, exécutez simplement :
+
+addsub sub3
