@@ -132,3 +132,24 @@ source ~/.bashrc
 Désormais, pour ajouter un sous-domaine, exécutez simplement :
 
 addsub sub3
+
+
+renouvellement  dun domaine expirer step s
+
+sudo systemctl stop haproxy
+sudo certbot certonly --standalone -d klinuxa.com --non-interactive --agree-tos --email admin@klinuxa.com
+
+
+Si tu veux forcer le renouvellement même avant l'expiration, ajoute --force-renewal 
+
+sudo certbot certonly --standalone --force-renewal -d klinuxa.com --non-interactive --agree-tos --email admin@klinuxa.com
+
+
+sudo cat /etc/letsencrypt/live/klinuxa.com/fullchain.pem /etc/letsencrypt/live/klinuxa.com/privkey.pem > /etc/haproxy/certs/klinuxa.com.pem
+
+sudo systemctl start haproxy
+
+
+
+
+
