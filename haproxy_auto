@@ -150,6 +150,59 @@ sudo cat /etc/letsencrypt/live/klinuxa.com/fullchain.pem /etc/letsencrypt/live/k
 sudo systemctl start haproxy
 
 
+automatisation renew certificat 
 
+script
+==================
+#!/bin/bash
+
+HAPROXY_CFG="/etc/haproxy/haproxy.cfg"
+CERTS_DIR="/etc/haproxy/certs"
+EMAIL="admin@klinuxa.com"
+
+echo "==> Arrêt du service HAProxy..."
+sudo systemctl stop haproxy
+
+echo "==> Extraction des domaines depuis $HAPROXY_CFG..."
+DOMAINS=$(grep -Eo 'hdr\(host\).*' "$HAPROXY_CFG" \
+          | sed -E 's/.*-i //' \
+          | tr ' ' '\n' \
+          | sed 's/^www\.//' \
+          | sort -u)
+
+for DOMAIN in $DOMAINS; do
+  echo ""
+  echo "🔄 Renouvellement du certificat pour: $DOMAIN"
+  
+  sudo certbot certonly --standalone \
+    --force-renewal \
+    --non-interactive \
+    --agree-tos \
+    --preferred-challenges http \
+    --email "$EMAIL" \
+    -d "$DOMAIN"
+
+  if [ $? -eq 0 ]; then
+    CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
+    if [ -f "$CERT_PATH/fullchain.pem" ] && [ -f "$CERT_PATH/privkey.pem" ]; then
+      echo "📦 Création du fichier PEM combiné pour $DOMAIN"
+      cat "$CERT_PATH/fullchain.pem" "$CERT_PATH/privkey.pem" | sudo tee "$CERTS_DIR/$DOMAIN.pem" > /dev/null
+    else
+      echo "⚠️  Certificats introuvables pour $DOMAIN, saut..."
+    fi
+  else
+    echo "❌ Échec du renouvellement pour $DOMAIN"
+  fi
+done
+
+echo ""
+echo "🚀 Redémarrage du service HAProxy..."
+sudo systemctl start haproxy
+
+echo "✅ Renouvellement terminé pour tous les domaines"
+============================
+
+crontab add line
+0 2 1 * * /opt/renew_all_certificates.sh >> /var/log/haproxy_cert_renewal.log 2>&1
 
 
