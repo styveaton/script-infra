@@ -1,0 +1,173 @@
+MÉTHODE 1 — BACKUP OFFICIEL GITLAB (RECOMMANDÉE)
+1️⃣ Créer un backup COMPLET GitLab
+docker exec -it gitlab gitlab-backup create
+
+
+👉 Ça sauvegarde :
+
+repos Git
+
+base PostgreSQL
+
+issues, MR, users
+
+CI/CD, artifacts
+
+registry (si activé)
+
+📁 Fichier créé ici (sur le host) :
+
+/opt/gitlab/backups/
+
+
+Exemple :
+
+1703859302_2025_12_29_17.8.2_gitlab_backup.tar
+
+2️⃣ Sauvegarder la CONFIGURATION (CRITIQUE)
+tar -czvf gitlab-config-backup.tar.gz \
+  /opt/gitlab/config \
+  /opt/gitlab/data/gitlab-secrets.json
+
+
+👉 TRÈS IMPORTANT
+Sans gitlab-secrets.json, les mots de passe & tokens seront invalides.
+
+3️⃣ Sauvegarde COMPLÈTE À TRANSFÉRER
+
+Tu dois copier vers l’autre serveur :
+
+/opt/gitlab/backups/*.tar
+gitlab-config-backup.tar.gz
+docker-compose.yml
+.env
+
+
+👉 Exemple :
+
+scp /opt/gitlab/backups/*.tar user@new-server:/backup/
+scp gitlab-config-backup.tar.gz user@new-server:/backup/
+
+🥈 MÉTHODE 2 — BACKUP PAR VOLUMES (RAPIDE MAIS MOINS PRO)
+
+⚠️ Moins recommandé, mais possible.
+
+docker-compose down
+
+tar -czvf gitlab-full-volume-backup.tar.gz \
+  /opt/gitlab/data \
+  /opt/gitlab/config \
+  /opt/gitlab/logs
+
+
+👉 Avantage : rapide
+👉 Inconvénient : dépend de la version GitLab
+
+🔁 RESTAURATION SUR UN AUTRE HOST (PAS À PAS)
+1️⃣ Installer Docker + Docker Compose
+
+Même version si possible.
+
+2️⃣ Déployer GitLab VIDE
+
+Sur le nouveau serveur :
+
+mkdir -p /opt/gitlab/{data,config,logs,backups}
+cd /opt/gitlab
+
+
+Copie :
+
+docker-compose.yml
+
+.env
+
+Puis :
+
+docker-compose up -d
+
+
+⏳ Attendre que GitLab démarre une première fois
+Puis STOP :
+
+docker-compose down
+
+3️⃣ Restaurer les fichiers
+Copier les backups :
+cp /backup/* /opt/gitlab/backups/
+
+Restaurer la config :
+tar -xzvf gitlab-config-backup.tar.gz -C /
+
+4️⃣ Démarrer GitLab
+docker-compose up -d
+
+5️⃣ Restaurer le BACKUP GitLab
+docker exec -it gitlab gitlab-backup restore BACKUP=1703859302_2025_12_29_17.8.2
+
+
+⚠️ Utilise le nom sans _gitlab_backup.tar
+
+6️⃣ Reconfigurer & redémarrer
+docker exec -it gitlab gitlab-ctl reconfigure
+docker exec -it gitlab gitlab-ctl restart
+
+✅ RÉSULTAT FINAL
+
+🎉 Tu retrouves :
+
+utilisateurs
+
+mots de passe
+
+projets
+
+repos
+
+CI/CD
+
+settings
+
+emails
+
+tokens
+
+👉 À L’IDENTIQUE de l’ancien serveur
+
+⏰ BACKUP AUTOMATIQUE (TRÈS RECOMMANDÉ)
+Cron quotidien
+crontab -e
+
+0 2 * * * docker exec gitlab gitlab-backup create
+
+
+👉 Backup chaque nuit à 02h
+
+☁️ OPTION PRO (SI TU VEUX)
+
+Je peux t’aider à :
+
+envoyer les backups vers S3 / Wasabi / Google Drive
+
+chiffrer les backups
+
+restaurer sur AWS / OVH / Hetzner
+
+tester un plan de disaster recovery
+
+🎯 RÉSUMÉ ULTRA CLAIR
+Action	Obligatoire
+gitlab-backup create	✅
+Sauvegarde gitlab-secrets.json	✅
+Copier backups	✅
+Restore via gitlab-backup restore	✅
+
+👉 Dis-moi :
+
+si tu veux un script automatique
+
+ou une restauration test
+
+ou un backup cloud
+
+Bravo 🎉 tu as maintenant un GitLab PRODUCTION-READY
